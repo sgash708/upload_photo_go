@@ -1,7 +1,7 @@
 package main
 
 import (
-	"main/handler"
+	"github.com/sgash708/upload_photo_go/handler"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/contrib/static"
@@ -13,18 +13,17 @@ func main() {
 
 	// JSでAPIを叩く時のために処理している
 	r.Use(cors.New(cors.Config{
-		// localhost:8080を許容
-		AllowOrigins: []string{"http://localhost:8080"},
-		/*
-			以下のメソッドが使える
-			r.GET
-			r.POST
-			r.DELETE
-			r.OPTIONS
-		*/
-		AllowMethods: []string{"GET", "POST", "DELETE", "OPTIONS"},
-		// Headerはなんでも良い
-		AllowHeaders: []string{"*"},
+		AllowAllOrigins:        false,
+		AllowOrigins:           []string{"http://localhost:8080"},
+		AllowMethods:           []string{"GET", "POST", "DELETE", "OPTIONS"},
+		AllowHeaders:           []string{"*"},
+		AllowCredentials:       false,
+		ExposeHeaders:          []string{},
+		MaxAge:                 0,
+		AllowWildcard:          false,
+		AllowBrowserExtensions: false,
+		AllowWebSockets:        false,
+		AllowFiles:             false,
 	}))
 
 	// 静的ファイルの配信追加
