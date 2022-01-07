@@ -7,14 +7,6 @@ import (
 )
 
 func TestMainSuccess(t *testing.T) {
-	// result, err := example("hoge")
-	// if err != nil {
-	// 	t.Fatalf("failed test %#v", err)
-	// }
-	// if result != 1 {
-	// 	t.Fatal("failed test")
-	// }
-
 	// 変数の定義
 	r := gin.Default()
 	// ルートにアクセスしたら、JSONで「{messge:ping}」を返す
