@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -10,7 +11,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Upload は画像をアップ後に「/images」ディレクトリに保存する。
+// File ファイル情報_構造体
+type File struct {
+	Path string `json:"path"`
+	Size int64  `json:"size"`
+}
+
+// Upload 画像をアップロードし、imagesディレクトリに保存
 func Upload(c *gin.Context) {
 	form, _ := c.MultipartForm()
 	files := form.File["file"]
@@ -29,12 +36,12 @@ func Upload(c *gin.Context) {
 	c.String(http.StatusOK, fmt.Sprintf("%d files uploaded!", len(files)))
 }
 
-// Delete は「/images」ディレクトリから削除する
+// Delete imagesディレクトリから画像を削除する
 func Delete(c *gin.Context) {
 	uuid := c.Param("uuid")
 	err := os.Remove(fmt.Sprintf("images/%s.png", uuid))
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
@@ -42,14 +49,19 @@ func Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("id: %s is deleted!", uuid)})
 }
 
-// File はファイル情報を持っている
-type File struct {
-	Path string `json:"path"`
-	Size int64  `json:"size"`
+// List imagesディレクトリから一覧を取得する
+func List(c *gin.Context) {
+	files, err := dirwalk("./images")
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, files)
 }
 
+// dirwalk ディレクトリ内検索
 func dirwalk(dir string) (files []File, err error) {
-	// 全然意味がわかりません
 	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		path = strings.Replace(path, "images/", "http://localhost:8888/", 1)
 		size := info.Size()
@@ -65,15 +77,4 @@ func dirwalk(dir string) (files []File, err error) {
 	}
 	files = files[1:]
 	return
-}
-
-// List は「/images」ディレクトリから一覧取得
-func List(c *gin.Context) {
-	files, err := dirwalk("./images")
-	if err != nil {
-		fmt.Println(err)
-		c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, files)
 }
