@@ -1,4 +1,4 @@
-module main
+module github.com/sgash708/upload_photo_go
 
 go 1.15
 
