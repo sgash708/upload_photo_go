@@ -1,7 +1,7 @@
 FROM golang:1.15
 
 WORKDIR /api
-# server以下をコピーする
+
 COPY . .
 ENV GO111MODULE=on
 
