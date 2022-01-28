@@ -5,6 +5,6 @@ WORKDIR /api
 COPY . .
 ENV GO111MODULE=on
 
-# APIをホットリロードで起動する
+# DO: APIをホットリロードで起動
 RUN go get github.com/pilu/fresh
 CMD ["fresh"]
