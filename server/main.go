@@ -11,7 +11,7 @@ import (
 func main() {
 	r := gin.Default()
 
-	// JSでAPIを叩く時のために処理している
+	// DO: JSでAPIを叩く時のために処理
 	r.Use(cors.New(cors.Config{
 		AllowAllOrigins:        false,
 		AllowOrigins:           []string{"http://localhost:8080"},
